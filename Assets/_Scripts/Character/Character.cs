@@ -57,6 +57,10 @@ namespace InfimaGames.LowPolyShooterPack
 		/// </summary>
 		private bool running;
 		/// <summary>
+		/// True if the character is jumping.
+		/// </summary>
+		private bool jumping;
+		/// <summary>
 		/// True if the character has its weapon holstered.
 		/// </summary>
 		private bool holstered;
@@ -135,6 +139,10 @@ namespace InfimaGames.LowPolyShooterPack
 		/// </summary>
 		private bool holdingButtonRun;
 		/// <summary>
+		/// True if the player is holding the jumping button.
+		/// </summary>
+		private bool holdingButtonJump;
+		/// <summary>
 		/// True if the player is holding the firing button.
 		/// </summary>
 		private bool holdingButtonFire;
@@ -203,6 +211,8 @@ namespace InfimaGames.LowPolyShooterPack
 			aiming = holdingButtonAim && CanAim();
 			//Match Run.
 			running = holdingButtonRun && CanRun();
+			//Match Run.
+			jumping = holdingButtonJump && CanJump();
 
 			//Holding the firing button.
 			if (holdingButtonFire)
@@ -248,7 +258,10 @@ namespace InfimaGames.LowPolyShooterPack
 		
 		public override bool IsCrosshairVisible() => !aiming && !holstered;
 		public override bool IsRunning() => running;
-		
+
+
+		public override bool IsJumping() => jumping;
+
 		public override bool IsAiming() => aiming;
 		public override bool IsCursorLocked() => cursorLocked;
 		
@@ -279,6 +292,10 @@ namespace InfimaGames.LowPolyShooterPack
 			//Update Animator Running.
 			const string boolNameRun = "Running";
 			characterAnimator.SetBool(boolNameRun, running);
+
+			//Update Animator Running.
+			const string triggerBoolJump = "Jumping";
+			characterAnimator.SetBool(triggerBoolJump, jumping);
 		}
 		
 		/// <summary>
@@ -552,6 +569,17 @@ namespace InfimaGames.LowPolyShooterPack
 			return true;
 		}
 
+
+		private bool CanJump()
+		{
+			//Block.
+			if (inspecting)
+				return false;
+
+			//Return.
+			return true;
+		}
+
 		#endregion
 
 		#region INPUT
@@ -777,6 +805,32 @@ namespace InfimaGames.LowPolyShooterPack
 			//Read.
 			axisMovement = cursorLocked ? context.ReadValue<Vector2>() : default;
 		}
+
+		/// <summary>
+		/// Movement.
+		/// </summary>
+		public void OnTryJump(InputAction.CallbackContext context)
+		{
+			//Block while the cursor is unlocked.
+			if (!cursorLocked)
+				return;
+
+			//Switch.
+			switch (context.phase)
+			{
+				//Started.
+				case InputActionPhase.Started:
+					//Start.
+					holdingButtonJump = true;
+					break;
+				//Canceled.
+				case InputActionPhase.Canceled:
+					//Stop.
+					holdingButtonJump = false;
+					break;
+			}
+		}
+
 		/// <summary>
 		/// Look.
 		/// </summary>

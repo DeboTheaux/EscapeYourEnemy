@@ -28,6 +28,11 @@ namespace InfimaGames.LowPolyShooterPack
         [Tooltip("How fast the player moves while running."), SerializeField]
         private float speedRunning = 9.0f;
 
+        [SerializeField]
+        private float jumpForce = 50f;
+        [SerializeField]
+        private float jumpRunningForce = 60f;
+
         #endregion
 
         #region PROPERTIES
@@ -39,6 +44,13 @@ namespace InfimaGames.LowPolyShooterPack
             get => rigidBody.velocity;
             //Setter.
             set => rigidBody.velocity = value;
+        }
+
+        //Force.
+        private Vector3 Force
+        {
+            //Setter.
+            set => rigidBody.AddForce(value, ForceMode.Impulse);
         }
 
         #endregion
@@ -135,7 +147,10 @@ namespace InfimaGames.LowPolyShooterPack
         {
             //Move.
             MoveCharacter();
-            
+
+            //Move.
+            Jump();
+
             //Unground.
             grounded = false;
         }
@@ -178,7 +193,16 @@ namespace InfimaGames.LowPolyShooterPack
             #endregion
             
             //Update Velocity.
-            Velocity = new Vector3(movement.x, 0.0f, movement.z);
+            Velocity = new Vector3(movement.x, Velocity.y, movement.z);
+        }
+
+        private void Jump()
+        {
+            if (playerCharacter.IsJumping() && grounded)
+                Force = Vector3.up * jumpForce;
+
+            if (playerCharacter.IsRunning() && playerCharacter.IsJumping() && grounded)
+                Force = Vector3.up * jumpRunningForce;
         }
 
         /// <summary>
