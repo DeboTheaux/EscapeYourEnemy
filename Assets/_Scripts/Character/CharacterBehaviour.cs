@@ -53,7 +53,12 @@ namespace InfimaGames.LowPolyShooterPack
         /// Returns true if the character is running.
         /// </summary>
         public abstract bool IsRunning();
-        
+
+        /// <summary>
+        /// Returns true if the character is jumping.
+        /// </summary>
+        public abstract bool IsJumping();
+
         /// <summary>
         /// Returns true if the character is aiming.
         /// </summary>
@@ -72,6 +77,7 @@ namespace InfimaGames.LowPolyShooterPack
         /// Returns the Movement Input.
         /// </summary>
         public abstract Vector2 GetInputMovement();
+
         /// <summary>
         /// Returns the Look Input.
         /// </summary>
