@@ -6,6 +6,8 @@ using Random = UnityEngine.Random;
 
 public class Projectile : MonoBehaviour {
 
+	[SerializeField] float damage = 5f;
+
 	[Range(5, 100)]
 	[Tooltip("After how long time should the bullet prefab be destroyed?")]
 	public float destroyAfter;
@@ -136,6 +138,16 @@ public class Projectile : MonoBehaviour {
 			//Toggle "isHit" on gas tank object
 			collision.transform.gameObject.GetComponent
 				<GasTankScript> ().isHit = true;
+			//Destroy bullet object
+			Destroy(gameObject);
+		}
+
+		if (collision.transform.gameObject.GetComponent
+				<HealthSystem>() != null)
+		{
+			//Toggle "isHit" on gas tank object
+			collision.transform.gameObject.GetComponent
+				<HealthSystem>().Damage(damage);
 			//Destroy bullet object
 			Destroy(gameObject);
 		}
