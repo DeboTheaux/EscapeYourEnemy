@@ -132,7 +132,7 @@ namespace InfimaGames.LowPolyShooterPack
                 groundHits, extents.y - radius * 0.5f, ~0, QueryTriggerInteraction.Ignore);
             
             //We can ignore the rest if we don't have any proper hits.
-            if (!groundHits.Any(hit => hit.collider != null && hit.collider != capsule)) 
+            if (!groundHits.Any(hit => hit.collider != null && hit.collider != capsule && !hit.transform.gameObject.layer.Equals(16))) 
                 return;
             
             //Store RaycastHits.
